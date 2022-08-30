@@ -1,6 +1,24 @@
 <div class="container">
 
-  Esercizio 5:
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Book</th>
+      <th scope="col">Author</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let book of booksWithAuthor; index as i">
+      <th scope="row">{{ i + 1 }}</th>
+      <td>{{ book.titleBook }}</td>
+      <td>{{ book.authorName }}</td>
+    </tr>
+    </tbody>
+  </table>
+
+
+  <!-- Esercizio 5:
   <div id="clickdiv">
     <button>Button</button>
   </div>
@@ -10,5 +28,5 @@
 
   <pre>
     Risultato Esercizio 1: {{(obsEsUno$ | async) | json }}
-  </pre>
+  </pre> -->
 </div>

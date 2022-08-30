@@ -37,22 +37,47 @@ export class BooksComponent implements OnInit {
     const books$ = this.booksService.fetchBooks().pipe(mergeAll());
     const authors$ = books$.pipe(mergeMap(book => this.booksService.getAuthorById(book.authorId)));
 
+    // one solution
+    // books$.pipe(
+    //   mergeMap(book => {
+    //     return combineLatest([
+    //       of(book),
+    //       authors$
+    //     ]);
+    //   }),
+    //   map(([book, author]) => {
+    //     // Here we can access both book and author
+    //     if (book.authorId === author.id){
+    //       this.bookWithAuthor = { titleBook: book.title, authorName: author.name };
+    //     } 
+    //     if (!this.booksWithAuthor.find(x => this.bookWithAuthor.titleBook === x.titleBook)){
+    //       this.booksWithAuthor.push(this.bookWithAuthor);
+    //     }
+    //     console.log(this.booksWithAuthor);
+    //   })
+    // ).subscribe();
+
+    // another solution
     books$.pipe(
-      mergeMap(book => {
+      concatMap(book => {
         return combineLatest([
-          of(book),
-          authors$
-        ]);
+          this.booksService.getAuthorById(book.authorId),
+          of(book)
+        ])
       }),
-      map(([book, author]) => {
-        // Here we can access both book and author
-        this.bookWithAuthor = { titleBook: book.title, authorName: author.name };
-        if (!this.booksWithAuthor.find(x => this.bookWithAuthor.titleBook === x.titleBook)) {
-          this.booksWithAuthor.push(this.bookWithAuthor);
-        }
-        console.log(this.booksWithAuthor);
-      })
+      map(([author, book]: [Author, Book]) => {
+        return { authorName: author.name, titleBook: book.title} as BookWithAuthor;
+      }),
+      toArray(),
+      tap(console.log),
+      tap(x => this.booksWithAuthor = x)
     ).subscribe();
+
+    // =============================TODO==============================
+    //DONE 1) renderizza in pagina il risultato della api books, tipo tabella o lista -> OK
+    //DONE 2) aggiungi un minimo di stili in modo che non faccia proprio cagare, eventualmente usa bootstrap se vuoi
+    // 3) crea un componente angular <paolo-paginator> che prende in input la lista da visualizzare, e renderizza in pagina un pannellino che ti mostra i pulsanti per le pagine
+    // 4) inizia ad aggiungere logica del cambio pagina e prima ancora devi fare in modo di comunicare fra il paginatore e la tabella che ti renderizza la lista
 
     // se chiamo una seconda ad es. mergemap nel pipe equivale a chiamare comunque .mergemap sull'outer obs., poi il valore con qu lavoro (pippo =>) è quello già manipolato dal primo mergemap
 
