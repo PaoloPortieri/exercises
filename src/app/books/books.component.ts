@@ -1,22 +1,22 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { forkJoin, from, fromEvent, Observable, of, timer, lastValueFrom, merge, concat, zip, combineLatest } from 'rxjs';
-import { map, mergeMap, concatMap, tap, withLatestFrom, toArray, skipWhile, takeWhile, switchMap, mergeAll, last, filter } from 'rxjs/operators';
-import { Author, Book, BookWithAuthor, isAuthor, isBook } from './books.model';
+import { Observable, of, timer, combineLatest } from 'rxjs';
+import { map, mergeMap, concatMap, tap, toArray, mergeAll } from 'rxjs/operators';
+import { Author, Book, BookWithAuthor } from './books.model';
 import { BooksService } from './books.service';
 
 @Component({
   selector: 'app-books',
   templateUrl: './books.component.html',
-  styleUrls: ['./books.component.scss']
+  styles: [`
+  .male { background-color: pink; color: white }
+  .female { background-color: blue }
+  .big { font-size: 30px }  
+`]
 })
 export class BooksComponent implements OnInit {
 
   res$: Observable<any> = of(null);
-  // books$!: Observable<Book[]>;
-  // book$!: Observable<Book>;
-  //  authors: Author[] = [];
-  // author$!: Observable<Author>;
   booksWithAuthor: BookWithAuthor[] = [];
   bookWithAuthor: BookWithAuthor = { "titleBook": "", "authorName": "" };
   http: HttpClient;
@@ -26,10 +26,8 @@ export class BooksComponent implements OnInit {
   }
 
   obsEsUno$: Observable<number> = of(1, 2, 3);
-
   obsEsDue$: Observable<number> = of(1, 2, 3);
   timerEsDue = timer(1000, 1000);
-
   obsEsTre$: Observable<number> = of(1, 2, 3);
 
   ngOnInit() {
@@ -141,6 +139,13 @@ export class BooksComponent implements OnInit {
   esCinque() {
     console.log('stepped into callApiEsCinque');
     console.log('it appears you know how to click a button.');
+  }
+
+  getCls(book: BookWithAuthor) {
+    return {
+      'big': book.authorName.length > 12,
+      'male': book.authorName.length > 12
+    }
   }
 
 }

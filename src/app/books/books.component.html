@@ -1,3 +1,7 @@
+<app-fbiondi></app-fbiondi>
+
+
+
 <div class="container">
 
   <table class="table table-striped">
@@ -9,13 +13,17 @@
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let book of booksWithAuthor; index as i">
+    <tr
+      *ngFor="let book of booksWithAuthor; index as i"
+      [ngClass]="getCls(book)"
+    >
       <th scope="row">{{ i + 1 }}</th>
       <td>{{ book.titleBook }}</td>
       <td>{{ book.authorName }}</td>
     </tr>
     </tbody>
   </table>
+
 
 
   <!-- Esercizio 5:
